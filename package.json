@@ -1,0 +1,60 @@
+{
+    "name": "express-quick-start",
+    "version": "0.0.1",
+    "description": "Express quick start",
+    "main": "src/index.ts",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start:local": "NODE_ENV=local nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts",
+        "start:dev": "NODE_ENV=development ts-node src/index.ts",
+        "start:stag": "NODE_ENV=staging ts-node src/index.ts",
+        "start:prod": "NODE_ENV=production ts-node src/index.ts",
+        "start:deploy": "ts-node src/index.ts",
+        "compile": "tsc",
+        "ts-node": "./node_modules/.bin/ts-node",
+        "typeorm": "./node_modules/.bin/ts-node ./node_modules/.bin/typeorm --config ./src/ormconfig"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+ssh://git@github.com/hoangnguyen1247/express-quick-start.git"
+    },
+    "keywords": [
+        "Express",
+        "quick",
+        "start"
+    ],
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/hoangnguyen1247/express-quick-start/issues"
+    },
+    "homepage": "https://github.com/hoangnguyen1247/express-quick-start#readme",
+    "dependencies": {
+        "@google-cloud/logging-bunyan": "^0.10.1",
+        "body-parser": "^1.19.0",
+        "bunyan": "^1.8.12",
+        "cookie-parser": "^1.4.4",
+        "cors": "^2.8.5",
+        "express": "^4.16.4",
+        "express-status-monitor": "^1.2.5",
+        "hbs": "^4.0.4",
+        "http-auth": "^3.2.3",
+        "jsonwebtoken": "^8.5.1",
+        "mongodb": "^3.2.4",
+        "morgan": "^1.9.1",
+        "node-dependency-injection": "^2.3.3",
+        "request": "^2.88.0",
+        "rotating-file-stream": "^1.4.1",
+        "swagger-jsdoc": "^3.2.9",
+        "swagger-ui-express": "^4.0.3",
+        "ts-node": "^8.1.0",
+        "typeorm": "^0.2.17",
+        "typescript": "^3.4.5",
+        "uuid": "^3.3.2"
+    },
+    "devDependencies": {
+        "@types/express": "^4.16.1",
+        "@types/node": "^12.0.2",
+        "nodemon": "^1.19.0"
+    }
+}
