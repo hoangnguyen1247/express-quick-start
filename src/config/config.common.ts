@@ -37,10 +37,24 @@ export const configCommon = {
     },
     database: {
         mysql: {
-            config: ormconfig,
+            config: {
+                "name": "mysql-express",
+                "type": "mysql",
+                "host": "localhost",
+                "port": 3306,
+                "username": "express",
+                "password": "express",
+                "database": "express",
+                "synchronize": true,
+                "logging": false,
+                "entities": [
+                    process.cwd() + "/src/entity/mysql/*.ts",
+                ],
+            },
         },
         mongodb: {
             config: {
+                "name": "mongodb-express",
                 "type": "mongodb",
                 "host": "localhost",
                 "port": 27017,
@@ -50,7 +64,7 @@ export const configCommon = {
                 "synchronize": false,
                 "logging": false,
                 "entities": [
-                    process.cwd() + "/src/entity/mongo/*.ts",
+                    process.cwd() + "/src/entity/mongodb/*.ts",
                 ],
                 "useNewUrlParser": true,
             },

@@ -1,9 +1,11 @@
 import { ContainerBuilder, Reference } from 'node-dependency-injection';
 
-import { MongodbConnector } from './../repository/mongodb/MongodbConnector';
-
 import { BunyanLoggerService } from "../service/BunyanLoggerService";
 
+import { MysqlConnector } from '../repository/mysql/MysqlConnector';
+import { MongodbConnector } from './../repository/mongodb/MongodbConnector';
+
+import { MysqlUserRepository } from '../repository/mysql/MysqlUserRepository';
 import { UserRepository } from '../repository/mongodb/UserRepository';
 
 import { UserService } from "../service/UserService";
@@ -20,6 +22,10 @@ export class DIContainer {
 
         //
         // Repositories
+        this._container.register("mysqlConnector", MysqlConnector);
+        this._container.register("mysqlUserRepository", MysqlUserRepository)
+            .addArgument(new Reference("mysqlConnector"));
+
         this._container.register("mongodbConnector", MongodbConnector);
         this._container.register("userRepository", UserRepository)
             .addArgument(new Reference("mongodbConnector"));
@@ -30,6 +36,7 @@ export class DIContainer {
         //
         // Services
         this._container.register("userService", UserService)
+            .addArgument(new Reference("mysqlUserRepository"))
             .addArgument(new Reference("userRepository"));
 
         return this._container;

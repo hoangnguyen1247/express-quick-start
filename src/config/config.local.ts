@@ -16,11 +16,17 @@ export const config = {
         mysql: {
             config: objectAssign({}, configCommon.database.mysql.config, {
                 port: 3306,
+                entities: [
+                    process.cwd() + "/build/entity/mysql/*.js",
+                ],
             }),
         },
         mongodb: {
             config: objectAssign({}, configCommon.database.mongodb.config, {
                 port: 27017,
+                entities: [
+                    process.cwd() + "/build/entity/mongodb/*.js",
+                ],
             }),
         },
     },

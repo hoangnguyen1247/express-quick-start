@@ -1,5 +1,5 @@
 
-import { User } from './../../entity/mongo/User';
+import { User } from '../../entity/mongodb/User';
 import { IMongodbUserRepository } from './../../abstract/repository/mongodb/IMongodbUserRepository.';
 import { MongodbConnector } from './MongodbConnector';
 import { MongodbBaseRepository } from './MongodbBaseRepository';

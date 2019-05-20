@@ -1,7 +1,7 @@
 import "reflect-metadata";
-// if (process.env.NODE_ENV === "local" && process.env.DEBUG === "true") {
+if (process.env.NODE_ENV === "local" && process.env.DEBUG === "true") {
     require('ts-node').register();
-// }
+}
 import { createConnection } from "typeorm";
 import * as express from "express";
 import * as bodyParser from "body-parser";
@@ -27,12 +27,15 @@ import { StatusRouter } from "./route/StatusRouter";
 import { errorHandler, createNotFoundError } from "./controller/error/ErrorHandler";
 
 import { MongodbConnector } from "./repository/mongodb/MongodbConnector";
+import { MysqlConnector } from "./repository/mysql/MysqlConnector";
 
 const main = async () => {
     // create express app
     const app = express();
     const diContainer = (new DIContainer()).createRegister();
+    const mysqlConnector = await (diContainer.get("mysqlConnector") as MysqlConnector).createConnection();
     const mongodbConnector = await (diContainer.get("mongodbConnector") as MongodbConnector).createConnection();
+    
     const statusMonitor = StatusMonitor({ path: '' });
 
     // view engine setup

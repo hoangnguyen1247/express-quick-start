@@ -42,6 +42,7 @@
         "jsonwebtoken": "^8.5.1",
         "mongodb": "^3.2.4",
         "morgan": "^1.9.1",
+        "mysql": "^2.17.1",
         "node-dependency-injection": "^2.3.3",
         "request": "^2.88.0",
         "rotating-file-stream": "^1.4.1",

@@ -2,7 +2,7 @@ import { createConnection, Connection } from 'typeorm';
 
 import { config } from "../../config";
 
-export class MongodbConnector {
+export class MysqlConnector {
 
     _connection: Connection;
 
@@ -12,7 +12,7 @@ export class MongodbConnector {
     createConnection = async () => {
         try {
             if (!this._connection) {
-                this._connection = await createConnection(config.database.mongodb.config);
+                this._connection = await createConnection(config.database.mysql.config);
             }
         } catch (error) {
             console.error("Setting connection error: " + error);
