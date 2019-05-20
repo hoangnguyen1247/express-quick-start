@@ -10,4 +10,6 @@ export interface IUserService {
     update(id, data): Promise<any>;
 
     delete(id): Promise<any>;
+
+    searchAndFilter(searchKey, searchFields, filters, page, size): Promise<any>;
 }

@@ -10,6 +10,9 @@ export function UserRouter(diContainer) {
         .get(userController.findMany)
         .post(userController.insert);
 
+    router.route("/search-and-filter")
+        .get(userController.searchAndFilter);
+
     router.route("/:id")
         .get(userController.findOneById)
         .put(userController.update)

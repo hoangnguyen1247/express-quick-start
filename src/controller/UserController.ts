@@ -58,7 +58,10 @@ export class UserController extends BaseController {
      *       - in: path
      *         name: id
      *         description: id
-     *         type: integer
+     *         schema: 
+     *           oneOf:
+     *             - integer
+     *             - string
      *     responses:
      *       200:
      *         description: Ok
@@ -125,7 +128,10 @@ export class UserController extends BaseController {
      *       - in: path
      *         name: id
      *         description: id
-     *         type: integer
+     *         schema: 
+     *           oneOf:
+     *             - integer
+     *             - string
      *       - in: body
      *         name: data
      *         description: data
@@ -176,7 +182,10 @@ export class UserController extends BaseController {
      *       - in: path
      *         name: id
      *         description: id
-     *         type: integer
+     *         schema: 
+     *           oneOf:
+     *             - integer
+     *             - string
      *     responses:
      *       200:
      *         description: Ok
@@ -190,6 +199,44 @@ export class UserController extends BaseController {
             }))
         }
         const { error, data } = await this._userService.delete(userId);
+        
+        if (error) return next(error);
+        res.status(data.code || 200)
+            .json({ ...data });
+    }
+
+     /**
+     * @swagger
+     * /users/search-and-filter:
+     *   get:
+     *     tags:
+     *       - Users
+     *     summary: Search & filter users
+     *     parameters:
+     *       - in: query
+     *         name: page
+     *         description: page index
+     *         type: integer
+     *         example: 0
+     *       - in: query
+     *         name: size
+     *         description: page offset
+     *         type: integer
+     *         example: 12
+     *     responses:
+     *       200:
+     *         description: Ok
+     */
+    searchAndFilter = async (req: Request, res: Response, next: NextFunction) => {
+        const searchKey = req.query.searchKey;
+        const searchFields = req.query.searchFields;
+        const page = req.query.page;
+        const size = req.query.size;
+
+        const filters = {
+
+        };
+        const { error, data } = await this._userService.searchAndFilter(searchKey, searchFields, filters, page, size);
         
         if (error) return next(error);
         res.status(data.code || 200)

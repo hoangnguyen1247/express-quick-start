@@ -9,6 +9,4 @@ export interface IMongodbBaseRepository {
     update(entity): Promise<any>;
 
     delete(entity): Promise<any>;
-
-    deleteById(id): Promise<any>;
 }

@@ -42,4 +42,19 @@ export abstract class MysqlBaseRepository<T> implements IMysqlBaseRepository {
 
         return entityToDelete;
     };
+
+    searchAndFilter = async() => {
+        const data = await this._baseRepository.find({
+
+        });
+
+        const count = await this._baseRepository.countDocuments({
+
+        });
+
+        return [
+            data,
+            count,
+        ];
+    }
 }

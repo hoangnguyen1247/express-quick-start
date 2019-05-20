@@ -1,9 +1,11 @@
+import { MongoRepository } from "typeorm";
+
 import { IMongodbBaseRepository } from "../../abstract/repository/mongodb/IMongodbBaseRepository";
 
 export abstract class MongodbBaseRepository<T> implements IMongodbBaseRepository {
 
-    protected _connection;;
-    protected _baseRepository;
+    protected _connection;
+    protected _baseRepository: MongoRepository<T>;
 
     protected constructor(baseRepository) {
         this._baseRepository = baseRepository;
@@ -13,7 +15,6 @@ export abstract class MongodbBaseRepository<T> implements IMongodbBaseRepository
         return await this._baseRepository.findAndCount({
             skip: page * size,
             take: size,
-            order: { lastModifiedDate: "DESC" },
         });
     };
 
@@ -29,17 +30,7 @@ export abstract class MongodbBaseRepository<T> implements IMongodbBaseRepository
         return await this._baseRepository.save(entity);
     };
 
-    delete = async (entity: T) => {
+    delete = async (entity) => {
         return await this._baseRepository.remove(entity);
-    };
-
-    deleteById = async(id: number) => {
-        const entityToDelete = await this._baseRepository.findOne(id);
-
-        if (entityToDelete) {
-            return await this._baseRepository.remove(entityToDelete);
-        }
-
-        return entityToDelete;
     };
 }

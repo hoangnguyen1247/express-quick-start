@@ -9,4 +9,19 @@ export class UserRepository extends MongodbBaseRepository<User> implements IMong
     constructor(mongodbConnector: MongodbConnector) {
         super(mongodbConnector.getConnection().getMongoRepository(User));
     }
+
+    searchAndFilter = async (searchKey, searchFields, filters, page, size) => {
+        const data = await this._baseRepository.find({
+
+        });
+
+        const count = await this._baseRepository.count({
+
+        });
+
+        return [
+            data,
+            count,
+        ];
+    }
 }
