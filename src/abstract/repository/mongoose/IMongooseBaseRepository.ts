@@ -1,4 +1,4 @@
-export interface IBaseRepository {
+export interface IMongooseBaseRepository {
 
     findMany(page, size): Promise<any>;
 
@@ -10,5 +10,7 @@ export interface IBaseRepository {
 
     delete(entity): Promise<any>;
 
-    deleteById(id): Promise<any>;
+    searchAndFilter(searchKey, searchFields, filters, page, size): Promise<any>;
+
+    insertMany(entities): Promise<any>;
 }

@@ -1,9 +1,10 @@
+import { Brackets, Repository } from "typeorm";
+
 import { IMysqlBaseRepository } from "../../abstract/repository/mysql/IMysqlBaseRepository";
 
 export abstract class MysqlBaseRepository<T> implements IMysqlBaseRepository {
 
-    protected _connection;;
-    protected _baseRepository;
+    protected _baseRepository: Repository<T>;
 
     protected constructor(baseRepository) {
         this._baseRepository = baseRepository;
@@ -13,7 +14,6 @@ export abstract class MysqlBaseRepository<T> implements IMysqlBaseRepository {
         return await this._baseRepository.findAndCount({
             skip: page * size,
             take: size,
-            order: { lastModifiedDate: "DESC" },
         });
     };
 
@@ -43,18 +43,61 @@ export abstract class MysqlBaseRepository<T> implements IMysqlBaseRepository {
         return entityToDelete;
     };
 
-    searchAndFilter = async() => {
-        const data = await this._baseRepository.find({
+    searchAndFilter = async(searchKey, searchFields, filters, page, size) => {
+        const query = this._baseRepository
+            .createQueryBuilder("entity")
+            .where("1 = 1");
 
-        });
+        const countQuery = await this._baseRepository
+            .createQueryBuilder("entity")
+            .select("COUNT(entity.id)", "count")
+            .where("1 = 1");
 
-        const count = await this._baseRepository.countDocuments({
+        if (searchKey) {
+            query.andWhere(new Brackets(qb => {
+                qb.where("0 = 1");
+                if (searchFields.indexOf("fullName") > -1) {
+                    qb.orWhere(`entity.fullName LIKE :fullName`, {fullName: '%' + searchKey + '%'});
+                }
+                if (searchFields.indexOf("phoneNumber") > -1) {
+                    qb.orWhere(`entity.phoneNumber LIKE :phoneNumber`, {phoneNumber: '%' + searchKey + '%'});
+                }
+                if (searchFields.indexOf("email") > -1) {
+                    qb.orWhere(`entity.email LIKE :email`, {email: '%' + searchKey + '%'});
+                }
+            }));
+            countQuery.andWhere(new Brackets(qb => {
+                qb.where("0 = 1");
+                if (searchFields.indexOf("fullName") > -1) {
+                    qb.orWhere(`entity.fullName LIKE :fullName`, {fullName: '%' + searchKey + '%'});
+                }
+                if (searchFields.indexOf("phoneNumber") > -1) {
+                    qb.orWhere(`entity.phoneNumber LIKE :phoneNumber`, {phoneNumber: '%' + searchKey + '%'});
+                }
+                if (searchFields.indexOf("email") > -1) {
+                    qb.orWhere(`entity.email LIKE :email`, {email: '%' + searchKey + '%'});
+                }
+            }));
+        }
 
-        });
+        if (filters.createdDate) {
+            query.andWhere(`DATE(entity.createdDate) = :createdDate`, {createdDate: filters.createdDate || ""});
+            countQuery.andWhere(`DATE(entity.createdDate) = :createdDate`, {createdDate: filters.createdDate || ""});
+        }
+
+        // order by
+        query.orderBy("entity.createdDate", "DESC")
+
+        // offset, limit
+        if (page && size) {
+            query.offset(page * size).limit(size);
+        }
+        const data = await query.getMany();
+        const count = await countQuery.getRawOne();
 
         return [
             data,
-            count,
+            count && count.count ? parseInt(count.count, 10) : 0,
         ];
     }
 }

@@ -29,6 +29,14 @@ export const config = {
                 ],
             }),
         },
+        mongoose: {
+            config: objectAssign({}, configCommon.database.mongoose.config, {
+                port: 27017,
+                entities: [
+                    process.cwd() + "/build/entity/mongoose/*.js",
+                ],
+            }),
+        },
     },
     redis: configCommon.redis,
 };

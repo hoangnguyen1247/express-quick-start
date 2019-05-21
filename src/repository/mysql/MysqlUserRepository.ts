@@ -1,5 +1,5 @@
 import { User } from '../../entity/mysql/User';
-import { IMysqlUserRepository } from '../../abstract/repository/mysql/IMysqlUserRepository.';
+import { IMysqlUserRepository } from '../../abstract/repository/mysql/IMysqlUserRepository';
 import { MysqlConnector } from './MysqlConnector';
 import { MysqlBaseRepository } from './MysqlBaseRepository';
 

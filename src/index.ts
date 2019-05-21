@@ -28,6 +28,7 @@ import { errorHandler, createNotFoundError } from "./controller/error/ErrorHandl
 
 import { MongodbConnector } from "./repository/mongodb/MongodbConnector";
 import { MysqlConnector } from "./repository/mysql/MysqlConnector";
+import { MongooseConnector } from "./repository/mongoose/MongooseConnector";
 
 const main = async () => {
     // create express app
@@ -35,6 +36,7 @@ const main = async () => {
     const diContainer = (new DIContainer()).createRegister();
     const mysqlConnector = await (diContainer.get("mysqlConnector") as MysqlConnector).createConnection();
     const mongodbConnector = await (diContainer.get("mongodbConnector") as MongodbConnector).createConnection();
+    const mongooseConnector = await (diContainer.get("mongooseConnector") as MongooseConnector).createConnection();
     
     const statusMonitor = StatusMonitor({ path: '' });
 

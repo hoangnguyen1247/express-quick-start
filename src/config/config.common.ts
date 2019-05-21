@@ -69,6 +69,23 @@ export const configCommon = {
                 "useNewUrlParser": true,
             },
         },
+        mongoose: {
+            config: {
+                "name": "mongoose-express",
+                "type": "mongodb",
+                "host": "localhost",
+                "port": 27017,
+                "username": "express",
+                "password": "express",
+                "database": "express",
+                "synchronize": false,
+                "logging": false,
+                "entities": [
+                    process.cwd() + "/src/entity/mongoose/*.ts",
+                ],
+                "useNewUrlParser": true,
+            },
+        },
     },
     redis: {
         port: 6379,

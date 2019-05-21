@@ -22,6 +22,11 @@ export const config = {
                 port: 27017,
             }),
         },
+        mongoose: {
+            config: objectAssign({}, configCommon.database.mongoose.config, {
+                port: 27017,
+            }),
+        },
     },
     redis: configCommon.redis,
 };

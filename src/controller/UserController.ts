@@ -93,6 +93,9 @@ export class UserController extends BaseController {
      *             fullName:
      *               type: string
      *               example: Hoàng Nguyễn
+     *             name:
+     *               type: string
+     *               example: Hoàng Nguyễn 123
      *           required:
      *             - fullName
      *     responses:
@@ -101,6 +104,7 @@ export class UserController extends BaseController {
      */
     insert = async (req: Request, res: Response, next: NextFunction) => {
         const fullName = req.body.fullName;
+        const name = req.body.name;
 
         if (!fullName) {
             return next(createError(400, "", {
@@ -109,6 +113,7 @@ export class UserController extends BaseController {
         }
 
         const { error, data } = await this._userService.insert({
+            name,
             fullName,
         });
         
@@ -141,6 +146,9 @@ export class UserController extends BaseController {
      *             fullName:
      *               type: string
      *               example: Hoàng Nguyễn
+     *             name:
+     *               type: string
+     *               example: Hoàng Nguyễn 123
      *           required:
      *             - fullName
      *     responses:
@@ -150,6 +158,7 @@ export class UserController extends BaseController {
     update = async (req: Request, res: Response, next: NextFunction) => {
         const userId = req.params.id;
         const fullName = req.body.fullName;
+        const name = req.body.name;
     
         if (!userId) {
             return next(createError(400, "", {
@@ -163,6 +172,7 @@ export class UserController extends BaseController {
         }
 
         const { error, data } = await this._userService.update(userId, {
+            name,
             fullName,
         });
         
@@ -214,6 +224,21 @@ export class UserController extends BaseController {
      *     summary: Search & filter users
      *     parameters:
      *       - in: query
+     *         name: searchKey
+     *         description: search keyword
+     *         type: string
+     *       - in: query
+     *         name: searchFields
+     *         description: search fields
+     *         type: array
+     *         items: 
+     *           type: string
+     *         collectionFormat: multi
+     *       - in: query
+     *         name: name
+     *         description: name
+     *         type: string
+     *       - in: query
      *         name: page
      *         description: page index
      *         type: integer
@@ -229,13 +254,17 @@ export class UserController extends BaseController {
      */
     searchAndFilter = async (req: Request, res: Response, next: NextFunction) => {
         const searchKey = req.query.searchKey;
-        const searchFields = req.query.searchFields;
+        const searchFields = Array.isArray(req.query.searchFields) ? req.query.searchFields : 
+            req.query.searchFields ? [req.query.searchFields] : [];
+        const name = req.query.name;
         const page = req.query.page;
         const size = req.query.size;
 
         const filters = {
-
         };
+        if (name) {
+            filters["name"] = name;
+        }
         const { error, data } = await this._userService.searchAndFilter(searchKey, searchFields, filters, page, size);
         
         if (error) return next(error);

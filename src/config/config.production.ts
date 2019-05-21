@@ -11,6 +11,7 @@ export const config = {
     database: {
         mysql: configCommon.database.mysql,
         mongodb: configCommon.database.mongodb,
+        mongoose: configCommon.database.mongoose,
     },
     redis: configCommon.redis,
 };
