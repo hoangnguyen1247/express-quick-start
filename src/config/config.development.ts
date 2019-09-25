@@ -3,6 +3,7 @@ import * as objectAssign from "object-assign";
 import { configCommon } from './config.common';
 
 export const config = {
+    version: configCommon.version,
     server: configCommon.server,
     corsOptions: configCommon.corsOptions,
     swaggerConfig: {
