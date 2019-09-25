@@ -12,6 +12,8 @@ import { MongooseUserRepository } from './../repository/mongoose/MongooseUserRep
 
 import { UserService } from "../service/UserService";
 
+import { ErrorHandler } from '../controller/error/ErrorHandler';
+
 export class DIContainer {
 
     private _container = new ContainerBuilder();
@@ -45,6 +47,11 @@ export class DIContainer {
             .addArgument(new Reference("mysqlUserRepository"))
             .addArgument(new Reference("mongodbUserRepository"))
             .addArgument(new Reference("mongooseUserRepository"));
+
+        //
+        // Error handler
+        this._container.register("errorHandler", ErrorHandler)
+            .addArgument(new Reference("kafkaProducerService"));
 
         return this._container;
     }

@@ -1,5 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import * as createError from "http-errors";
+import * as i18n from "i18n";
+
+import { IKafkaProducerService } from '../../abstract/service/kafka/IKafkaProducerService';
 
 /**
  400	BadRequest
@@ -44,89 +47,141 @@ import * as createError from "http-errors";
  510	NotExtended
  511	NetworkAuthenticationRequired
  */
-export function createNotFoundError(req: Request, res: Response, next: NextFunction) {
-    next(createError(404, "Not Found"));
-}
 
-export function errorHandler(err: any, req: Request, res: Response, next: NextFunction) {
-    res.locals.message = err.message;
-    res.locals.error = req.app.get('env') === 'development' ? err : {};
+export class ErrorHandler {
 
-    switch (err.status) {
-        case 400:
-            badRequestHandler(err, req, res, next);
-            break;
-        case 401:
-            unauthorizedHandler(err, req, res, next);
-            break;
-        case 403:
-            forbiddenHandler(err, req, res, next);
-            break;
-        case 404:
-            notFoundHandler(err, req, res, next);
-            break;
-        case 500:
-            internalServerErrorHandler(err, req, res, next);
-            break;
-        case 501:
-            notImplementedHandler(err, req, res, next);
-            break;
-        default:
-            internalServerErrorHandler(err, req, res, next);
-            break;
+    private _kafkaProducerService: IKafkaProducerService;
+
+    constructor(kafkaProducerService) {
+
+        this._kafkaProducerService = kafkaProducerService;
     }
-}
 
-function badRequestHandler(err, req, res, next) {
-    console.log(err.stack);
-    res.status(400)
-        .json({
-            message: err && err.error ? err.error.message: "",
-            errorCode: err && err.error ? err.error.errorCode: "",
-        });
-}
+    createNotFoundError = (req: Request, res: Response, next: NextFunction) => {
+        next(createError(404));
+    }
 
-function unauthorizedHandler(err, req, res, next) {
-    console.log(err.stack);
-    res.status(401)
-        .json({
-            message: err && err.error ? err.error.message: "",
-            errorCode: err && err.error ? err.error.errorCode: "",
-        });
-}
+    createServiceUnavailableError = (req: Request, res: Response, next: NextFunction) => {
+        next(createError(503));
+    }
 
-function forbiddenHandler(err, req, res, next) {
-    console.log(err.stack);
-    res.status(403)
-        .json({
-            message: err && err.error ? err.error.message: "",
-            errorCode: err && err.error ? err.error.errorCode: "",
-        });
-}
+    errorHandler = (err: any, req: Request, res: Response, next: NextFunction) => {
+        res.locals.message = err.message;
+        res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-function notFoundHandler(err, req, res, next) {
-    console.log(err.stack);
-    res.status(404)
-        .json({
-            message: err && err.error ? err.error.message: "",
-            errorCode: err && err.error ? err.error.errorCode: "",
-        });
-}
+        switch (err.status) {
+            case 400:
+                this.badRequestHandler(err, req, res, next);
+                break;
+            case 401:
+                this.unauthorizedHandler(err, req, res, next);
+                break;
+            case 403:
+                this.forbiddenHandler(err, req, res, next);
+                break;
+            case 404:
+                this.notFoundHandler(err, req, res, next);
+                break;
+            case 500:
+                this.internalServerErrorHandler(err, req, res, next);
+                break;
+            case 501:
+                this.notImplementedHandler(err, req, res, next);
+                break;
+            default:
+                this.internalServerErrorHandler(err, req, res, next);
+                break;
+        }
+    }
 
-function internalServerErrorHandler(err, req, res, next) {
-    console.log(err.stack);
-    res.status(500)
-        .json({
-            message: err && err.error ? err.error.message: "",
-            errorCode: err && err.error ? err.error.errorCode: "",
-        });
-}
+    badRequestHandler = (err, req, res, next) => {
+        console.log(err.stack);
+        const errorCode = err && err.error && err.error.errorCode ? err.error.errorCode : "";
+        const formattedStack = err && typeof err.stack === "string" ? err.stack.replace(/ at /g, " <br/>at ") : ""; 
 
-function notImplementedHandler(err, req, res, next) {
-    console.log(err.stack);
-    res.status(501)
-        .json({
-            message: err && err.error ? err.error.message: "",
-            errorCode: err && err.error ? err.error.errorCode: "",
-        });
+        this._kafkaProducerService.pushSystemErrorMsg({ channels: ["email"], dataObjs: [{ message: formattedStack }] });
+        res.status(400)
+            .json({
+                errorCode: errorCode,
+                message: errorCode ? i18n.__(`errorMessages.${errorCode}`) : i18n.__(`errorMessages.badRequest`),
+            });
+    }
+
+    unauthorizedHandler = (err, req, res, next) => {
+        console.log(err.stack);
+        const errorCode = err && err.error && err.error.errorCode ? err.error.errorCode : "";
+        const formattedStack = err && typeof err.stack === "string" ? err.stack.replace(/ at /g, " <br/>at ") : ""; 
+
+        // this._kafkaProducerService.pushSystemErrorMsg({ channels: ["email"], dataObjs: [{ message: formattedStack }] });
+        res.status(401)
+            .json({
+                errorCode: errorCode,
+                message: errorCode ? i18n.__(`errorMessages.${errorCode}`) : i18n.__(`errorMessages.unauthorized`),
+            });
+    }
+
+    forbiddenHandler = (err, req, res, next) => {
+        console.log(err.stack);
+        const errorCode = err && err.error && err.error.errorCode ? err.error.errorCode : "";
+        const formattedStack = err && typeof err.stack === "string" ? err.stack.replace(/ at /g, " <br/>at ") : ""; 
+
+        this._kafkaProducerService.pushSystemErrorMsg({ channels: ["email"], dataObjs: [{ message: formattedStack }] });
+        res.status(403)
+            .json({
+                errorCode: errorCode,
+                message: errorCode ? i18n.__(`errorMessages.${errorCode}`) : i18n.__(`errorMessages.forbidden`),
+            });
+    }
+
+    notFoundHandler = (err, req, res, next) => {
+        console.log(err.stack);
+        const errorCode = err && err.error && err.error.errorCode ? err.error.errorCode : "";
+        const formattedStack = err && typeof err.stack === "string" ? err.stack.replace(/ at /g, " <br/>at ") : "";
+
+        // this._kafkaProducerService.pushSystemErrorMsg({ channels: ["email"], dataObjs: [{ message: formattedStack }] });
+        res.status(404)
+            .json({
+                errorCode: errorCode,
+                message: errorCode ? i18n.__(`errorMessages.${errorCode}`) : i18n.__(`errorMessages.notFound`),
+            });
+    }
+
+    internalServerErrorHandler = (err, req, res, next) => {
+        console.log(err.stack);
+        const errorCode = err && err.error && err.error.errorCode ? err.error.errorCode : "";
+        const formattedStack = err && typeof err.stack === "string" ? err.stack.replace(/ at /g, " <br/>at ") : ""; 
+
+        this._kafkaProducerService.pushSystemErrorMsg({ channels: ["email"], dataObjs: [{ message: formattedStack }] });
+        res.status(500)
+            .json({
+                errorCode: errorCode,
+                message: errorCode ? i18n.__(`errorMessages.${errorCode}`) : i18n.__(`errorMessages.internalServerError`),
+            });
+    }
+
+    notImplementedHandler = (err, req, res, next) => {
+        console.log(err.stack);
+        const errorCode = err && err.error && err.error.errorCode ? err.error.errorCode : "";
+        const formattedStack = err && typeof err.stack === "string" ? err.stack.replace(/ at /g, " <br/>at ") : ""; 
+
+        this._kafkaProducerService.pushSystemErrorMsg({ channels: ["email"], dataObjs: [{ message: formattedStack }] });
+        res.status(501)
+            .json({
+                errorCode: errorCode,
+                message: errorCode ? i18n.__(`errorMessages.${errorCode}`) : i18n.__(`errorMessages.notImplemented`),
+            });
+    }
+
+    serviceUnavailableHandler = (err, req, res, next) => {
+        console.log(err.stack);
+        const errorCode = err && err.error && err.error.errorCode ? err.error.errorCode : "";
+        const formattedStack = err && typeof err.stack === "string" ? err.stack.replace(/ at /g, " <br/>at ") : ""; 
+
+        this._kafkaProducerService.pushSystemErrorMsg({ channels: ["email"], dataObjs: [{ message: formattedStack }] });
+        res.status(503)
+            .json({
+                errorCode: errorCode,
+                message: errorCode ? i18n.__(`errorMessages.${errorCode}`) : i18n.__(`errorMessages.serviceUnavailable`),
+            });
+    }
 }
