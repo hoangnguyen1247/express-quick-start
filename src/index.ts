@@ -5,6 +5,7 @@ if (process.env.NODE_ENV === "local" && process.env.DEBUG === "true") {
 import * as express from "express";
 import * as bodyParser from "body-parser";
 import * as cookieParser from "cookie-parser";
+import * as favicon from "serve-favicon";
 import * as cors from 'cors';
 import * as fs from "fs";
 import * as path from "path";
@@ -86,6 +87,7 @@ const main = async () => {
 
     app.use(express.static(path.resolve(__dirname, '..', 'public')));
     app.use(express.static(path.resolve(__dirname, '..', 'uploads')));
+    app.use(favicon(path.resolve(__dirname, 'public', 'favicon.ico')));
 
     app.use("/auth", AuthRouter(diContainer));
     app.use("/users", UserRouter(diContainer));

@@ -9,6 +9,7 @@ export function VersionRouter() {
 
     router.route("/").get(async (req, res, next) => {
         res.render('version', { 
+            title: "Version",
             shortVersion: config.version.shortVersion, 
             fullVersion: config.version.fullVersion, 
         });

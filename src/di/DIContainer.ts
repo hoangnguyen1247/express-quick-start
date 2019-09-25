@@ -46,6 +46,7 @@ export class DIContainer {
         //
         // Services
         this._container.register("userService", UserService)
+            .addArgument(new Reference("kafkaProducerService"))
             .addArgument(new Reference("mysqlUserRepository"))
             .addArgument(new Reference("mongodbUserRepository"))
             .addArgument(new Reference("mongooseUserRepository"));
