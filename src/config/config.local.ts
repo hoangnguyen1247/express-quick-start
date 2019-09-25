@@ -8,7 +8,7 @@ export const config = {
     corsOptions: configCommon.corsOptions,
     swaggerConfig: {
         swaggerDefinition: objectAssign({}, configCommon.swaggerConfig.swaggerDefinition, {
-            host: "localhost:5201",
+            host: "localhost:4201",
         }),
         apis: configCommon.swaggerConfig.apis,
     },
@@ -17,25 +17,16 @@ export const config = {
         mysql: {
             config: objectAssign({}, configCommon.database.mysql.config, {
                 port: 3306,
-                entities: [
-                    process.cwd() + "/build/entity/mysql/*.js",
-                ],
             }),
         },
         mongodb: {
             config: objectAssign({}, configCommon.database.mongodb.config, {
                 port: 27017,
-                entities: [
-                    process.cwd() + "/build/entity/mongodb/*.js",
-                ],
             }),
         },
         mongoose: {
             config: objectAssign({}, configCommon.database.mongoose.config, {
                 port: 27017,
-                entities: [
-                    process.cwd() + "/build/entity/mongoose/*.js",
-                ],
             }),
         },
     },

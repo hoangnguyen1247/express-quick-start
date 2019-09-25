@@ -20,7 +20,7 @@ export class MongooseConnector {
                     host: settingsConnectionConfig.host,
                     port: settingsConnectionConfig.port,
                     database: settingsConnectionConfig.database,
-                }), { useNewUrlParser: true });
+                }), { useNewUrlParser: true, useUnifiedTopology: true });
             }
         } catch (error) {
             console.error("Setting connection error: " + error);

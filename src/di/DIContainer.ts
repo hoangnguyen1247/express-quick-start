@@ -1,6 +1,7 @@
 import { ContainerBuilder, Reference } from 'node-dependency-injection';
 
 import { BunyanLoggerService } from "../service/BunyanLoggerService";
+import { KafkaProducerService } from '../service/kafka/KafkaProducerService';
 
 import { MysqlConnector } from '../repository/mysql/MysqlConnector';
 import { MongodbConnector } from './../repository/mongodb/MongodbConnector';
@@ -23,6 +24,7 @@ export class DIContainer {
         //
         // Utils
         this._container.register("bunyanLoggerService", BunyanLoggerService);
+        this._container.register("kafkaProducerService", KafkaProducerService);
 
         //
         // Repositories

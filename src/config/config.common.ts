@@ -7,7 +7,7 @@ export const configCommon = {
         fullVersion: packageJson.version + "." + "7e6cc45", // git rev-parse --short HEAD
     },
     server: {
-        port: 5201,
+        port: 4201,
     },
     corsOptions: {
         origin: "*",
