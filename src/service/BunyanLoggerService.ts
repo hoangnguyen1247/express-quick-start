@@ -9,8 +9,8 @@ export class BunyanLoggerService {
     constructor() {
         // Creates a Bunyan Stackdriver Logging client
         const loggingBunyan = new LoggingBunyan({
-            projectId: "heramo-com",
-            keyFilename: path.resolve(__dirname, "..", "..", "heramo-com-42f6455daea7.json"),
+            projectId: "express-com",
+            keyFilename: path.resolve(__dirname, "..", "..", "express-com-42f6455daea7.json"),
         });
 
         // Create a Bunyan logger that streams to Stackdriver Logging
