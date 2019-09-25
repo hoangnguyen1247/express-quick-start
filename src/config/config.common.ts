@@ -1,6 +1,11 @@
 import * as ormconfig from "../ormconfig";
+import * as packageJson from "../../package.json";
 
 export const configCommon = {
+    version: {
+        shortVersion: packageJson.version,
+        fullVersion: packageJson.version + "." + "7e6cc45", // git rev-parse --short HEAD
+    },
     server: {
         port: 5201,
     },
@@ -37,6 +42,7 @@ export const configCommon = {
     },
     database: {
         mysql: {
+            enabled: true,
             config: {
                 "name": "mysql-express",
                 "type": "mysql",
@@ -53,6 +59,7 @@ export const configCommon = {
             },
         },
         mongodb: {
+            enabled: true,
             config: {
                 "name": "mongodb-express",
                 "type": "mongodb",
@@ -70,6 +77,7 @@ export const configCommon = {
             },
         },
         mongoose: {
+            enabled: true,
             config: {
                 "name": "mongoose-express",
                 "type": "mongodb",
