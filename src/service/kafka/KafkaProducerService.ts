@@ -4,14 +4,13 @@ import { IKafkaProducerService } from '../../abstract/service/kafka/IKafkaProduc
 
 export class KafkaProducerService implements IKafkaProducerService {
 
-    private _producer;
+    private _producer: kafka.Producer;
 
     constructor() {
 
-        const Producer = kafka.Producer;
         const client = new kafka.KafkaClient({ kafkaHost: "localhost:9092" });
 
-        this._producer = new Producer(client);
+        this._producer = new kafka.Producer(client);
 
         try {
             this._producer.on('ready', () => {

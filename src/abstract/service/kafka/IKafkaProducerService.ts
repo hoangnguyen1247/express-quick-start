@@ -1,4 +1,4 @@
-import { NotifierDataDto } from '../../../dto/NotifierDataDto';
+import { NotifierDataDto } from "../../../dto/NotifierDataDto";
 
 export interface IKafkaProducerService {
 
