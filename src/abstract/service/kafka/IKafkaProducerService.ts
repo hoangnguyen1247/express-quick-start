@@ -1,4 +1,8 @@
+import { NotifierDataDto } from '../../../dto/NotifierDataDto';
+
 export interface IKafkaProducerService {
 
-    pushSystemErrorMsg(data): Promise<any>;
+    pushLogMsg(data: NotifierDataDto): Promise<any>;
+
+    pushSystemErrorMsg(data: NotifierDataDto): Promise<any>;
 }

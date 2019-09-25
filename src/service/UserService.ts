@@ -3,15 +3,17 @@ import * as createError from "http-errors";
 import { IMysqlUserRepository } from "../abstract/repository/mysql/IMysqlUserRepository";
 import { IMongodbUserRepository } from "../abstract/repository/mongodb/IMongodbUserRepository";
 import { IMongooseUserRepository } from "../abstract/repository/mongoose/IMongooseUserRepository";
+import { BaseService } from "./BaseService";
 
-export class UserService {
+export class UserService extends BaseService {
 
     private _mysqlUserRepository: IMysqlUserRepository;
     private _mongodbUserRepository: IMongodbUserRepository;
     private _mongooseUserRepository: IMongooseUserRepository;
 
-    constructor(mysqlUserRepository, mongodbUserRepository, mongooseUserRepository) {
-        
+    constructor(kafkaProducerService, mysqlUserRepository, mongodbUserRepository, mongooseUserRepository) {
+        super(kafkaProducerService);
+
         this._mysqlUserRepository = mysqlUserRepository;
         this._mongodbUserRepository = mongodbUserRepository;
         this._mongooseUserRepository = mongooseUserRepository;
