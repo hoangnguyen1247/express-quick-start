@@ -24,6 +24,7 @@ import { IndexRouter } from "./route/IndexRouter";
 import { AuthRouter } from "./route/AuthRouter";
 import { UserRouter } from "./route/UserRouter";
 import { StatusRouter } from "./route/StatusRouter";
+import { VersionRouter } from "./route/VersionRouter";
 
 import { MongodbConnector } from "./repository/mongodb/MongodbConnector";
 import { MysqlConnector } from "./repository/mysql/MysqlConnector";
@@ -89,6 +90,7 @@ const main = async () => {
     app.use("/auth", AuthRouter(diContainer));
     app.use("/users", UserRouter(diContainer));
     app.use("/status", StatusRouter(statusMonitor));
+    app.use("/version", VersionRouter());
 
     const options = config.swaggerConfig;
     const swaggerSpec = swaggerJSDoc(options);
