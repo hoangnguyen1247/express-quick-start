@@ -20,4 +20,3 @@ src/**/*.js
 src/**/*.js.map
 
 package-lock.json
-yarn.lock
